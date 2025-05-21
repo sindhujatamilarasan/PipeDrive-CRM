@@ -1,0 +1,42 @@
+# Laravel related
+/vendor/
+/node_modules/
+.env
+Homestead.yaml
+Homestead.json
+/public/storage
+/storage/*.key
+
+# Laravel Mix / npm
+npm-debug.log
+yarn-error.log
+yarn-debug.log
+.env.backup
+
+# IDE and OS files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Laravel specific storage & cache
+/storage/app/public
+/storage/framework/cache/data
+/storage/framework/sessions
+/storage/framework/views
+
+# Log files
+/storage/logs/*.log
+
+# Composer files
+composer.lock
+
+# NPM and Yarn lock files (optional, but recommended to keep usually)
+# package-lock.json
+# yarn.lock
+
+# Ignore database SQLite files (if any)
+*.sqlite
+*.sqlite3
