@@ -18,6 +18,10 @@ Route::get('/', function () {
 });
 Route::get('/auth/redirect', [PipedriveController::class, 'redirectToPipedrive']);
 Route::get('/auth/callback', [PipedriveController::class, 'handleCallback']);
-Route::get('/panel', [PipedriveController::class, 'showPanel']);
+Route::get('/panel', [PipedriveController::class, 'showPanel'])->withoutMiddleware([
+        \App\Http\Middleware\Authenticate::class,
+        \Illuminate\Session\Middleware\StartSession::class, // optional
+        \App\Http\Middleware\VerifyCsrfToken::class,       // optional
+    ]);
 Route::get('/pipedrive/user', [PipedriveController::class, 'getPipedriveUser']);
 
