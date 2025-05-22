@@ -92,15 +92,14 @@ public function showPanel(Request $request)
     <body>
         <h1>Hello from custom panel</h1>
         <p>If you see this, iframe is working!</p>
-
         <script>
-            // Notify Pipedrive that the panel is ready
-            window.parent.postMessage({ type: \"panel-ready\" }, \"*\");
+            window.parent.postMessage({ type: "panel-ready" }, "*");
         </script>
     </body>
     </html>'
 )
 ->header('Content-Type', 'text/html')
+->header('X-Frame-Options', 'ALLOW-FROM https://app.pipedrive.com')
 ->header('Content-Security-Policy', "frame-ancestors https://app.pipedrive.com; connect-src 'self' https://api-segment.pipedrive.com https://esp-eu.aptrinsic.com https://sesheta.pipedrive.com;");
 
 }
