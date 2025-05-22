@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 
 class PipedriveController extends Controller
 {
@@ -61,47 +62,44 @@ class PipedriveController extends Controller
         return $response->json();
     }
 
-    // public function showPanel(Request $request)
-    // {
-    //     return response('<html><body><h1>Hello from custom panel</h1></body></html>')
-    //         ->header('Content-Type', 'text/html')
-    //         ->header('X-Frame-Options', 'ALLOWALL')
-    //         ->header('Content-Security-Policy', "frame-ancestors 'self' https://*.pipedrive.com;");
-
-
-    //     // $email = "my_cool_customer@example.com";
-
-    //     // $response = Http::timeout(15)->get('https://octopus-app-3hac5.ondigitalocean.app/api/stripe_data', [
-    //     //     'email' => $email,
-    //     // ]);
-
-    //     // $data = $response->ok() ? $response->json() : [];
-
-    //     // return response()
-    //     //     ->view('pipedrive.panel')
-    //     //     ->header('Content-Type', 'text/html')
-    //     //     //->header('X-Frame-Options', '')
-    //     //     ->header('Content-Security-Policy', "frame-ancestors 'self' https://pipedrive.com https://*.pipedrive.com;");
-    // }
-        public function showPanel(Request $request)
-        {
-            $html = <<<HTML
-            <!DOCTYPE html>
+    public function showPanel(Request $request)
+    {
+      return response(
+            '<!DOCTYPE html>
             <html>
             <head>
-                <meta charset="utf-8">
-                <meta http-equiv="Content-Security-Policy" content="frame-ancestors 'self' https://pipedrive.com https://*.pipedrive.com">
+                <meta charset="UTF-8">
+                <title>Custom Panel</title>
+                <style>body { font-family: sans-serif; padding: 2em; }</style>
             </head>
             <body>
                 <h1>Hello from custom panel</h1>
+                <p>If you see this, iframe is working!</p>
             </body>
-            </html>
-            HTML;
+            </html>'
+       )
+        ->header('Content-Type', 'text/html')
+        ->header('X-Frame-Options', 'ALLOWALL')
+        ->header('Content-Security-Policy', 'frame-ancestors *');
+        //->header('Content-Security-Policy', "frame-ancestors https://sindhuja-sandbox.pipedrive.com https://app.pipedrive.com")
 
-                return response($html)
-                    ->header('Content-Type', 'text/html')
-                    ->header('X-Frame-Options', '');
-            }
+    // Remove X-Frame-Options header
+
+
+        // $email = "my_cool_customer@example.com";
+
+        // $response = Http::timeout(15)->get('https://octopus-app-3hac5.ondigitalocean.app/api/stripe_data', [
+        //     'email' => $email,
+        // ]);
+
+        // $data = $response->ok() ? $response->json() : [];
+
+        // return response()
+        //     ->view('pipedrive.panel')
+        //     ->header('Content-Type', 'text/html')
+        //     //->header('X-Frame-Options', '')
+        //     ->header('Content-Security-Policy', "frame-ancestors 'self' https://pipedrive.com https://*.pipedrive.com;");
+    }
 
     public function panelPayload(Request $request)
     {

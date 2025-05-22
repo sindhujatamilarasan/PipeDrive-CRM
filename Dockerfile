@@ -18,8 +18,10 @@ COPY . .
 # Install PHP dependencies with Composer (no dev for production)
 RUN composer install --no-dev --optimize-autoloader
 
-# Cache Laravel config for better performance
-RUN php artisan config:cache
+# Clear and cache Laravel config for better performance and to apply any .env changes
+RUN php artisan config:clear \
+    && php artisan cache:clear \
+    && php artisan config:cache
 
 # Expose port 9000 (php-fpm default)
 EXPOSE 9000

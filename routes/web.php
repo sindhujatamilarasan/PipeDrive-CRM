@@ -21,17 +21,3 @@ Route::get('/auth/callback', [PipedriveController::class, 'handleCallback']);
 Route::get('/panel', [PipedriveController::class, 'showPanel']);
 Route::get('/pipedrive/user', [PipedriveController::class, 'getPipedriveUser']);
 
-// Route::get('/panel', function () {
-//     return response()->json([
-//         'title' => 'Transaction Panel',
-//         'iframe' => [
-//             'url' => 'https://44b0-2401-4900-1f2d-4aa6-dc73-bf7c-1b58-f56b.ngrok-free.app/panel/view',
-//             'height' => 500, // adjust height as needed
-//         ]
-//     ]);
-// });
-
-// routes/web.php
-Route::get('/pipedrive-panel', function () {
-    return view('panel');
-});
