@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
 class PipedriveController extends Controller
 {
@@ -62,44 +64,89 @@ class PipedriveController extends Controller
         return $response->json();
     }
 
-    public function showPanel(Request $request)
-    {
-      return response(
-            '<!DOCTYPE html>
-            <html>
-            <head>
-                <meta charset="UTF-8">
-                <title>Custom Panel</title>
-                <style>body { font-family: sans-serif; padding: 2em; }</style>
-            </head>
-            <body>
-                <h1>Hello from custom panel</h1>
-                <p>If you see this, iframe is working!</p>
-            </body>
-            </html>'
-       )
-        ->header('Content-Type', 'text/html')
-        ->header('X-Frame-Options', 'ALLOWALL')
-        ->header('Content-Security-Policy', 'frame-ancestors *');
-        //->header('Content-Security-Policy', "frame-ancestors https://sindhuja-sandbox.pipedrive.com https://app.pipedrive.com")
-
-    // Remove X-Frame-Options header
 
 
-        // $email = "my_cool_customer@example.com";
+public function showPanel(Request $request)
+{
 
-        // $response = Http::timeout(15)->get('https://octopus-app-3hac5.ondigitalocean.app/api/stripe_data', [
-        //     'email' => $email,
-        // ]);
 
-        // $data = $response->ok() ? $response->json() : [];
 
-        // return response()
-        //     ->view('pipedrive.panel')
-        //     ->header('Content-Type', 'text/html')
-        //     //->header('X-Frame-Options', '')
-        //     ->header('Content-Security-Policy', "frame-ancestors 'self' https://pipedrive.com https://*.pipedrive.com;");
-    }
+        // Replace 'your-secret-key' with your actual JWT secret
+        // $decoded = JWT::decode($token, new Key('your-secret-key', 'HS256'));
+
+        // // You can check token claims here (like userId, expiry etc)
+        // // For example:
+        // if ($decoded->exp < time()) {
+        //     return response('Unauthorized: token expired', 401);
+        // }
+
+        // Token is valid, return your panel HTML
+       return response(
+    '<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Custom Panel</title>
+        <style>body { font-family: sans-serif; padding: 2em; }</style>
+    </head>
+    <body>
+        <h1>Hello from custom panel</h1>
+        <p>If you see this, iframe is working!</p>
+
+        <script>
+            // Notify Pipedrive that the panel is ready
+            window.parent.postMessage({ type: "panel-ready" }, "*");
+        </script>
+    </body>
+    </html>'
+)
+->header('Content-Type', 'text/html')
+->header('X-Frame-Options', 'ALLOWALL')
+->header('Content-Security-Policy', 'frame-ancestors *');
+
+
+
+}
+
+
+    // public function showPanel(Request $request)
+    // {
+    //   return response(
+    //         '<!DOCTYPE html>
+    //         <html>
+    //         <head>
+    //             <meta charset="UTF-8">
+    //             <title>Custom Panel</title>
+    //             <style>body { font-family: sans-serif; padding: 2em; }</style>
+    //         </head>
+    //         <body>
+    //             <h1>Hello from custom panel</h1>
+    //             <p>If you see this, iframe is working!</p>
+    //         </body>
+    //         </html>'
+    //    )
+    //     ->header('Content-Type', 'text/html')
+    //     ->header('X-Frame-Options', 'ALLOWALL')
+    //     ->header('Content-Security-Policy', 'frame-ancestors *');
+    //     //->header('Content-Security-Policy', "frame-ancestors https://sindhuja-sandbox.pipedrive.com https://app.pipedrive.com")
+
+    // // Remove X-Frame-Options header
+
+
+    //     // $email = "my_cool_customer@example.com";
+
+    //     // $response = Http::timeout(15)->get('https://octopus-app-3hac5.ondigitalocean.app/api/stripe_data', [
+    //     //     'email' => $email,
+    //     // ]);
+
+    //     // $data = $response->ok() ? $response->json() : [];
+
+    //     // return response()
+    //     //     ->view('pipedrive.panel')
+    //     //     ->header('Content-Type', 'text/html')
+    //     //     //->header('X-Frame-Options', '')
+    //     //     ->header('Content-Security-Policy', "frame-ancestors 'self' https://pipedrive.com https://*.pipedrive.com;");
+    // }
 
     public function panelPayload(Request $request)
     {
