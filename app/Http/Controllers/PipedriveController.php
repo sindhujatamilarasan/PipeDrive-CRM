@@ -81,7 +81,7 @@ public function showPanel(Request $request)
         // }
 
         // Token is valid, return your panel HTML
-       return response(
+     return response(
     '<!DOCTYPE html>
     <html>
     <head>
@@ -101,11 +101,8 @@ public function showPanel(Request $request)
     </html>'
 )
 ->header('Content-Type', 'text/html')
-->header('X-Frame-Options', 'ALLOWALL')
-->header('Content-Security-Policy', 'frame-ancestors *');
-
-
-
+->header('X-Frame-Options', 'ALLOW-FROM https://app.pipedrive.com')
+->header('Content-Security-Policy', "frame-ancestors https://app.pipedrive.com");
 }
 
 
