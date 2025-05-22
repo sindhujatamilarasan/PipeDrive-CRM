@@ -81,7 +81,7 @@ public function showPanel(Request $request)
         // }
 
         // Token is valid, return your panel HTML
-     return response(
+    return response(
     '<!DOCTYPE html>
     <html>
     <head>
@@ -95,14 +95,14 @@ public function showPanel(Request $request)
 
         <script>
             // Notify Pipedrive that the panel is ready
-            window.parent.postMessage({ type: "panel-ready" }, "*");
+            window.parent.postMessage({ type: \"panel-ready\" }, \"*\");
         </script>
     </body>
     </html>'
 )
 ->header('Content-Type', 'text/html')
-->header('X-Frame-Options', 'ALLOW-FROM https://app.pipedrive.com')
-->header('Content-Security-Policy', "frame-ancestors https://app.pipedrive.com");
+->header('Content-Security-Policy', "frame-ancestors https://app.pipedrive.com; connect-src 'self' https://api-segment.pipedrive.com https://esp-eu.aptrinsic.com https://sesheta.pipedrive.com;");
+
 }
 
 
