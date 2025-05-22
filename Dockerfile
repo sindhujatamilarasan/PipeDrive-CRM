@@ -15,6 +15,9 @@ WORKDIR /var/www/html
 # Copy application source
 COPY . .
 
+# ✅ Create necessary Laravel storage subdirectories
+RUN mkdir -p storage/framework/sessions storage/framework/views storage/framework/cache
+
 # Copy PHP-FPM pool config
 COPY ./www.conf /usr/local/etc/php-fpm.d/www.conf
 
