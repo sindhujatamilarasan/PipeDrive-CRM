@@ -1,30 +1,36 @@
-# Use official PHP 8.1 FPM image as base
+# Use PHP 8.1 FPM base
 FROM php:8.1-fpm
 
-# Install system dependencies and PHP extensions
+# Install dependencies and Nginx
 RUN apt-get update && apt-get install -y \
-    git unzip libzip-dev libonig-dev curl zip \
+    nginx supervisor git unzip libzip-dev libonig-dev curl zip \
     && docker-php-ext-install pdo_mysql zip mbstring
 
-# Install Composer (copy from official composer image)
+# Copy Composer from official image
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Set working directory inside container
+# Set working directory
 WORKDIR /var/www/html
 
-# Copy all project files into container
+# Copy project files
 COPY . .
 
-# Install PHP dependencies with Composer (no dev for production)
+# Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Clear and cache Laravel config for better performance and to apply any .env changes
+# Clear and cache Laravel config
 RUN php artisan config:clear \
-    && php artisan cache:clear \
-    && php artisan config:cache
+ && php artisan cache:clear \
+ && php artisan config:cache
 
-# Expose port 9000 (php-fpm default)
-EXPOSE 9000
+# Copy nginx config
+COPY ./nginx.conf /etc/nginx/sites-available/default
 
-# Run PHP-FPM server
-CMD ["php-fpm"]
+# Copy supervisor config
+COPY ./supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Expose port 80 for HTTP
+EXPOSE 80
+
+# Start both PHP-FPM and Nginx using Supervisor
+CMD ["/usr/bin/supervisord", "-n"]
