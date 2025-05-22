@@ -102,7 +102,8 @@ public function showPanel(Request $request)
 )
 ->header('Content-Type', 'text/html')
 ->header('X-Frame-Options', 'ALLOWALL')
-->header('Content-Security-Policy', 'frame-ancestors *');
+->header('Content-Security-Policy', "frame-ancestors 'self' https://app.pipedrive.com");
+
 
 
 
