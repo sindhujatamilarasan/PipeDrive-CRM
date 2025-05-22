@@ -22,8 +22,14 @@ RUN chown -R www-data:www-data storage bootstrap/cache \
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Generate a new APP_KEY every time (even if one already exists)
-RUN php artisan key:generate --force
+# Copy entrypoint script
+COPY entrypoint.sh /entrypoint.sh
+
+# Make it executable
+RUN chmod +x /entrypoint.sh
+
+# Use entrypoint to start container
+ENTRYPOINT ["/entrypoint.sh"]
 
 
 # Clear and cache Laravel configuration
