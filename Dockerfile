@@ -1,24 +1,32 @@
-# Use PHP 8.1 FPM base
+# Use PHP 8.1 FPM as base image
 FROM php:8.1-fpm
 
-# Install dependencies and Nginx
+# Install system dependencies and PHP extensions
 RUN apt-get update && apt-get install -y \
     nginx supervisor git unzip libzip-dev libonig-dev curl zip \
-    && docker-php-ext-install pdo_mysql zip mbstring
+    && docker-php-ext-install zip mbstring
 
-# Copy Composer from official image
+# Copy Composer from official Composer image
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy project files
+# Copy Laravel project files
 COPY . .
+
+# Set correct permissions for Laravel
+RUN chown -R www-data:www-data storage bootstrap/cache \
+ && chmod -R 775 storage bootstrap/cache
 
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Clear and cache Laravel config
+# Generate a new APP_KEY every time (even if one already exists)
+RUN php artisan key:generate --force
+
+
+# Clear and cache Laravel configuration
 RUN php artisan config:clear \
  && php artisan cache:clear \
  && php artisan config:cache
@@ -26,11 +34,11 @@ RUN php artisan config:clear \
 # Copy nginx config
 COPY ./nginx.conf /etc/nginx/sites-available/default
 
-# Copy supervisor config
+# Copy supervisord config
 COPY ./supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# Expose port 80 for HTTP
+# Expose HTTP port
 EXPOSE 80
 
-# Start both PHP-FPM and Nginx using Supervisor
+# Start services using Supervisor
 CMD ["/usr/bin/supervisord", "-n"]
