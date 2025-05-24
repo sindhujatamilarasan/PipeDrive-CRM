@@ -107,6 +107,11 @@ public function showPanel(Request $request)
 
 #To render HTML
  // Fetch your data from external API (via Http or cURL)
+     $email = $request->query('email');
+
+    // Optional: Log the email for debugging
+    Log::info('Pipedrive panel loaded for email: ' . $email);
+
     $response = Http::get('https://octopus-app-3hac5.ondigitalocean.app/api/stripe_data', [
         'email' => 'my_cool_customer@example.com'
     ]);
