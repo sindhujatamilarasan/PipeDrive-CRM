@@ -1,5 +1,8 @@
 <div id="invoices">Loading invoices...</div>
 
+<!-- Include Pipedrive SDK -->
+<script src="https://cdn.pipedriveassets.com/webapp/js/api/v1/api.js"></script>
+
 <script>
   Pipedrive.execute(() => {
     Pipedrive.Application.persons.get().then(person => {
@@ -17,7 +20,6 @@
             return;
           }
 
-          // Render your invoices here using data
           let html = '<ul>';
           data.invoices.forEach(inv => {
             html += `<li>Invoice ID: ${inv.id}, Paid: ${inv.amount_paid}, Due: ${inv.amount_due}</li>`;
