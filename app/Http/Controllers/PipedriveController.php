@@ -107,37 +107,33 @@ public function showPanel(Request $request)
 
 #To render HTML
  // Fetch your data from external API (via Http or cURL)
-      $email = $request->query('email');
-    $email = 'my_cool_customer@example.com';
-        if (!$email) {
-            return response()->json(['error' => 'Email parameter is required'], 400);
-        }
+     $email = $request->query('email');
 
-        Log::info('Fetching invoices for email: ' . $email);
+    // Optional: Log the email for debugging
+    Log::info('Pipedrive panel loaded for email: ' . $email);
 
-        // Call external API, passing the email
-        $response = Http::get('https://octopus-app-3hac5.ondigitalocean.app/api/stripe_data', [
-            'email' => $email,
-        ]);
+    $response = Http::get('https://octopus-app-3hac5.ondigitalocean.app/api/stripe_data', [
+        'email' => 'my_cool_customer@example.com'
+    ]);
 
-        if ($response->failed()) {
-            Log::error('Failed to fetch invoices', ['email' => $email, 'response' => $response->body()]);
-            return response()->json(['error' => 'Failed to fetch invoices'], 500);
-        }
+    $data = $response->json();
 
-        $data = $response->json();
+    // Create an HTML output string with data rendered inside tags, like a table or list
+    $html = '<h3>Stripe Invoice Data</h3><ul>';
+    Log::info('Stripe API Response:', ['response' => $data]);
+    foreach ($data['invoices'] as $invoice) {
+        $html .= '<li>Invoice ID: ' . htmlspecialchars($invoice['id']) . '<br>';
+        $html .= 'Paid: ' . htmlspecialchars($invoice['amount_paid']) . '<br>';
+        $html .= 'Amount Due: ' . htmlspecialchars($invoice['amount_due']) . '</li><br>';
+    }
 
-        // Log the API response for debugging
-        Log::info('Stripe API response:', ['response' => $data]);
+    $html .= '</ul>';
 
-        // Assuming invoices are in $data['invoices']
-        $invoices = data_get($data, 'invoices', []);
-
-        // Otherwise, just return the blade view for initial page load
-     return response()
-        ->view('pipedrive.panel', compact('invoices'))
+    return response($html)
+        ->header('Content-Type', 'text/html')
         ->header('X-Frame-Options', 'ALLOW-FROM https://app.pipedrive.com')
         ->header('Content-Security-Policy', "frame-ancestors https://app.pipedrive.com;");
+
 }
 
 
