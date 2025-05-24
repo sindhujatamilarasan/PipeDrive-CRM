@@ -68,39 +68,15 @@ class PipedriveController extends Controller
 
 public function showPanel(Request $request)
 {
-
-
-
-        // Replace 'your-secret-key' with your actual JWT secret
-        // $decoded = JWT::decode($token, new Key('your-secret-key', 'HS256'));
-
-        // // You can check token claims here (like userId, expiry etc)
-        // // For example:
-        // if ($decoded->exp < time()) {
-        //     return response('Unauthorized: token expired', 401);
-        // }
-
-        // Token is valid, return your panel HTML
     return response(
-    '<!DOCTYPE html>
-    <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Custom Panel</title>
-        <style>body { font-family: sans-serif; padding: 2em; }</style>
-    </head>
-    <body>
-        <h1>Hello from custom panel</h1>
-        <p>If you see this, iframe is working!</p>
-        <script>
-            window.parent.postMessage({ type: "panel-ready" }, "*");
-        </script>
-    </body>
-    </html>'
-)
-->header('Content-Type', 'text/html')
-->header('X-Frame-Options', 'ALLOW-FROM https://app.pipedrive.com')
-->header('Content-Security-Policy', "frame-ancestors https://app.pipedrive.com; connect-src 'self' https://api-segment.pipedrive.com https://esp-eu.aptrinsic.com https://sesheta.pipedrive.com;");
+        '<div style="padding: 10px; font-size: 14px;">
+    <h3>Hello from Laravel Panel!</h3>
+    <p>This content is rendered inside Pipedrive.</p>
+</div>'
+    )
+    ->header('Content-Type', 'text/html')
+    ->header('X-Frame-Options', 'ALLOW-FROM https://app.pipedrive.com')
+    ->header('Content-Security-Policy', "frame-ancestors https://app.pipedrive.com; connect-src 'self' https://api-segment.pipedrive.com https://esp-eu.aptrinsic.com https://sesheta.pipedrive.com;");
 
 }
 
