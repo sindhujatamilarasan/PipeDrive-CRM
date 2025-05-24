@@ -115,10 +115,10 @@ public function showPanel(Request $request)
 
     // Create an HTML output string with data rendered inside tags, like a table or list
     $html = '<h3>Stripe Invoice Data</h3><ul>';
-
-    foreach ($data['result']['data']['data'] as $invoice) {
+    Log::info('Stripe API Response:', ['response' => $data]);
+    foreach ($data['result']['invoices'] as $invoice) {
         $html .= '<li>Invoice ID: ' . htmlspecialchars($invoice['id']) . '<br>';
-        $html .= 'Status: ' . htmlspecialchars($invoice['status']) . '<br>';
+        $html .= 'Paid: ' . htmlspecialchars($invoice['amount_paid']) . '<br>';
         $html .= 'Amount Due: ' . htmlspecialchars($invoice['amount_due']) . '</li><br>';
     }
 
