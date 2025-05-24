@@ -68,40 +68,66 @@ class PipedriveController extends Controller
 
 public function showPanel(Request $request)
 {
- $curl = curl_init();
+ #To fetch json data
+//  $curl = curl_init();
 
-    curl_setopt_array($curl, [
-        CURLOPT_URL => 'https://octopus-app-3hac5.ondigitalocean.app/api/stripe_data?email=my_cool_customer%40example.com',
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 30,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'GET',
+//     curl_setopt_array($curl, [
+//         CURLOPT_URL => 'https://octopus-app-3hac5.ondigitalocean.app/api/stripe_data?email=my_cool_customer%40example.com',
+//         CURLOPT_RETURNTRANSFER => true,
+//         CURLOPT_ENCODING => '',
+//         CURLOPT_MAXREDIRS => 10,
+//         CURLOPT_TIMEOUT => 30,
+//         CURLOPT_FOLLOWLOCATION => true,
+//         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+//         CURLOPT_CUSTOMREQUEST => 'GET',
+//     ]);
+
+//     $response = curl_exec($curl);
+
+//     if (curl_errno($curl)) {
+//         $error_msg = curl_error($curl);
+//         curl_close($curl);
+//         // Return error JSON response
+//         return response()->json(['error' => $error_msg], 500);
+//     }
+
+//     curl_close($curl);
+
+//     // Decode to check if valid JSON, else return error
+//     $jsonData = json_decode($response, true);
+
+//     if (json_last_error() !== JSON_ERROR_NONE) {
+//         return response()->json(['error' => 'Invalid JSON received from API'], 500);
+//     }
+
+//     return response()->json($jsonData)
+//         ->header('X-Frame-Options', 'ALLOW-FROM https://app.pipedrive.com')
+//         ->header('Content-Security-Policy', "frame-ancestors https://app.pipedrive.com; connect-src 'self' https://api-segment.pipedrive.com https://esp-eu.aptrinsic.com https://sesheta.pipedrive.com;");
+
+
+#To render HTML
+ // Fetch your data from external API (via Http or cURL)
+    $response = Http::get('https://octopus-app-3hac5.ondigitalocean.app/api/stripe_data', [
+        'email' => 'my_cool_customer@example.com'
     ]);
 
-    $response = curl_exec($curl);
+    $data = $response->json();
 
-    if (curl_errno($curl)) {
-        $error_msg = curl_error($curl);
-        curl_close($curl);
-        // Return error JSON response
-        return response()->json(['error' => $error_msg], 500);
+    // Create an HTML output string with data rendered inside tags, like a table or list
+    $html = '<h3>Stripe Invoice Data</h3><ul>';
+
+    foreach ($data['result']['data']['data'] as $invoice) {
+        $html .= '<li>Invoice ID: ' . htmlspecialchars($invoice['id']) . '<br>';
+        $html .= 'Status: ' . htmlspecialchars($invoice['status']) . '<br>';
+        $html .= 'Amount Due: ' . htmlspecialchars($invoice['amount_due']) . '</li><br>';
     }
 
-    curl_close($curl);
+    $html .= '</ul>';
 
-    // Decode to check if valid JSON, else return error
-    $jsonData = json_decode($response, true);
-
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        return response()->json(['error' => 'Invalid JSON received from API'], 500);
-    }
-
-    return response()->json($jsonData)
+    return response($html)
+        ->header('Content-Type', 'text/html')
         ->header('X-Frame-Options', 'ALLOW-FROM https://app.pipedrive.com')
-        ->header('Content-Security-Policy', "frame-ancestors https://app.pipedrive.com; connect-src 'self' https://api-segment.pipedrive.com https://esp-eu.aptrinsic.com https://sesheta.pipedrive.com;");
+        ->header('Content-Security-Policy', "frame-ancestors https://app.pipedrive.com;");
 
 }
 
