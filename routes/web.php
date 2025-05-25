@@ -12,15 +12,9 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-Route::get('/', function () {
-    return view('welcome');
-});
 Route::get('/auth/redirect', [PipedriveController::class, 'redirectToPipedrive']);
 Route::get('/auth/callback', [PipedriveController::class, 'handleCallback']);
-
 Route::middleware([])->group(function () {
     Route::get('/panel', [PipedriveController::class, 'showPanel']);
 });
 Route::get('/pipedrive/user', [PipedriveController::class, 'getPipedriveUser']);
-
