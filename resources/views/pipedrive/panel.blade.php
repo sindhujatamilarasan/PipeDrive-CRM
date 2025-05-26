@@ -78,7 +78,7 @@
         @foreach($invoices as $invoice)
             <div class="invoice-card">
                 <strong>Invoice #{{ $invoice['number'] }}</strong><br>
-                Amount: ${{ number_format($invoice['total'], 2) }}<br>
+                Amount: ${{ number_format($invoice['total'] / 10000, 2) }}<br>
                 Status: {{ $invoice['status'] }}<br>
                 Customer: {{ $invoice['customer'] }}<br>
                 {{ $invoice['paid'] }}
@@ -95,7 +95,7 @@
         @foreach($charges as $charge)
             <div class="invoice-card">
                 <strong>Charge #{{ $charge['id'] }}</strong><br>
-                Amount: ${{ number_format($charge['amount'], 2) }}<br>
+                Amount: ${{ number_format($charge['amount'] / 10000, 2) }}<br>
                 Status: {{ $charge['status'] }}<br>
                 Customer: {{ $charge['customer'] }}<br>
                 @if(isset($charge['created']))
